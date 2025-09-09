@@ -61,12 +61,12 @@ RUN apt install -y \
 RUN cp /usr/bin/bootc-initramfs-setup /usr/lib/dracut/modules.d/37composefs
 
 RUN echo "$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" > kernel_version.txt && \
-    dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$(cat kernel_version.txt)"  "/usr/lib/modules/$(cat kernel_version.txt)/initramfs.img" && \
+    dracut --force --no-hostonly --reproducible --zstd --verbose --add "ostree lvm dm" --kver "$(cat kernel_version.txt)"  "/usr/lib/modules/$(cat kernel_version.txt)/initramfs.img" && \
     cp /boot/vmlinuz-$(cat kernel_version.txt) "/usr/lib/modules/$(cat kernel_version.txt)/vmlinuz" && \
     rm kernel_version.txt
 
 # If you want a desktop :)
-# RUN apt install -y gnome
+RUN apt install -y gnome
 
 # Alter root file structure a bit for ostree
 RUN mkdir -p /boot /sysroot /var/home && \
